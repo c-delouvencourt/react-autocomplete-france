@@ -2,6 +2,9 @@
 
 `react-autocomplete-france` is a React library for address autocompletion in France. It uses the `adresse.data.gouv.fr` API to provide real-time address suggestions.
 
+![Exemple](./ressources/example.png)
+
+
 ## Getting started
 
 Install the library:
@@ -18,12 +21,30 @@ pnpm install react-autocomplete-france
 
 ## Example
 
+### Fast example
 ```jsx
 import {useAutocomplete} from "../../hooks";
 
 export function ExampleAutocomplete() {
 
-    const {ref } = useAutocomplete({
+    const { ref } = useAutocomplete({
+      onSuggestionSelected: (suggestion) => {
+        console.log(suggestion);
+      },
+    });
+
+    return <input ref={ref}/>;
+}
+```
+
+### Full example
+
+```jsx
+import {useAutocomplete} from "../../hooks";
+
+export function ExampleAutocomplete() {
+
+    const { ref } = useAutocomplete({
       onSuggestionSelected: (suggestion) => {
         console.log(suggestion);
       },
@@ -74,3 +95,11 @@ Table with the props:
 | `hasWatermark` | `boolean` | Whether to show the watermark. |
 | `containerStyle` | `React.CSSProperties` | Style object for the container. |
 | `suggestionStyle` | `React.CSSProperties` | Style object for the suggestions. |
+
+## Contributing
+
+You can contribute to this project by opening an issue or a pull request.
+
+## License
+
+This project is licensed under the MIT License.
