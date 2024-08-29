@@ -3,6 +3,12 @@ import React, {SVGProps, useEffect, useRef, useState} from "react";
 import {AutocompleteFeature} from "../types";
 import AutocompleteAPI from "../api/AutocompleteAPI";
 
+interface ContainerPosition {
+    top: number
+    left: number
+    width: number
+}
+
 interface UseAutocompleteProps {
     onSuggestionSelected?: (suggestion: AutocompleteFeature) => void
     debounce?: number
@@ -12,6 +18,7 @@ interface UseAutocompleteProps {
     suggestionStyle?: React.CSSProperties
     suggestionLabelStyle?: React.CSSProperties
     alignementRef?: React.RefObject<HTMLElement>
+    containerPosition?: ContainerPosition
 }
 
 const MapPin = (props: SVGProps<any>) => (
@@ -37,8 +44,9 @@ function useAutocomplete({
                              hasWatermark = true,
                              containerStyle = {},
                              suggestionStyle = {},
-    suggestionLabelStyle = {},
-    alignementRef
+                             suggestionLabelStyle = {},
+                             containerPosition,
+                             alignementRef
                          }: UseAutocompleteProps) {
 
     const ref = useRef<HTMLInputElement>(null);
@@ -47,7 +55,7 @@ function useAutocomplete({
     const [suggestions, setSuggestions] = useState<AutocompleteFeature[]>([]);
     const [query, setQuery] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [position, setPosition] = useState({ top: 0, left: 0, width: 0 });
+    const [position, setPosition] = useState({ top: containerPosition?.top, left: containerPosition?.left, width: containerPosition?.width });
 
     const handleInput = () => {
         if(!ref.current) return;
@@ -90,10 +98,15 @@ function useAutocomplete({
 
     useEffect(() => {
         if (alignementReference.current) {
-            const { top, left, height, width } = alignementReference.current.getBoundingClientRect();
-            setPosition({ top: top + height, left: left, width });
+            if(containerPosition){
+                setPosition({ top: containerPosition.top, left: containerPosition.left, width: containerPosition.width });
+                return;
+            }else {
+                const { bottom, left, width } = alignementReference.current.getBoundingClientRect();
+                setPosition({ top: bottom, left: left, width });
+            }
         }
-    }, [alignementReference.current, suggestions]);
+    }, [alignementReference.current, suggestions, ref]);
 
     useEffect(() => {
         if (ref.current && suggestions.length > 0) {
@@ -146,6 +159,7 @@ function useAutocomplete({
                                     overflow: 'hidden',
                                     whiteSpace: 'nowrap',
                                     width: 'calc(100% - 20px)',
+                                    ...suggestionLabelStyle
                                 }}>{suggestion.properties.label}</span>
                             </li>
                         ))
@@ -167,7 +181,7 @@ function useAutocomplete({
             const portalElement = document.createElement('div');
             portalElement.id = 'autocomplete-portal';
             portalElement.style.position = 'absolute';
-            portalElement.style.zIndex = '9999';
+            portalElement.style.zIndex = '10';
             portalElement.style.top = position.top + 'px';
             portalElement.style.left = position.left + 'px';
             portalElement.style.width = position.width + 'px';
