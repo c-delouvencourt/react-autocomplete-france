@@ -1,7 +1,7 @@
 {
   "name": "react-autocomplete-france",
-  "description": "Template to quick-start React library development with TypeScript.",
-  "private": true,
+  "description": "React components for France Address Gouv Autocomplete",
+  "private": false,
   "version": "1.0.0",
   "type": "module",
   "author": "Clément de Louvencourt <clement@meilleursbiens.com>",
