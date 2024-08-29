@@ -2,7 +2,7 @@
   "name": "react-autocomplete-france",
   "description": "React components for France Address Gouv Autocomplete",
   "private": false,
-  "version": "1.0.8",
+  "version": "1.0.9",
   "type": "module",
   "author": "Clément de Louvencourt <clement@meilleursbiens.com>",
   "license": "MIT",

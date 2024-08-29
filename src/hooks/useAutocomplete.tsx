@@ -6,7 +6,6 @@ import AutocompleteAPI from "../api/AutocompleteAPI";
 interface ContainerPosition {
     top: number
     left: number
-    width: number
 }
 
 interface UseAutocompleteProps {
@@ -55,7 +54,7 @@ function useAutocomplete({
     const [suggestions, setSuggestions] = useState<AutocompleteFeature[]>([]);
     const [query, setQuery] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [position, setPosition] = useState({ top: containerPosition?.top, left: containerPosition?.left, width: containerPosition?.width });
+    const [position, setPosition] = useState({ top: containerPosition?.top, left: containerPosition?.left, width: 0 });
 
     const handleInput = () => {
         if(!ref.current) return;
@@ -99,7 +98,8 @@ function useAutocomplete({
     useEffect(() => {
         if (alignementReference.current) {
             if(containerPosition){
-                setPosition({ top: containerPosition.top, left: containerPosition.left, width: containerPosition.width });
+                const { width } = alignementReference.current.getBoundingClientRect();
+                setPosition({ top: containerPosition.top, left: containerPosition.left, width: width });
                 return;
             }else {
                 const { bottom, left, width } = alignementReference.current.getBoundingClientRect();
