@@ -10,6 +10,8 @@ interface UseAutocompleteProps {
     hasWatermark?: boolean
     containerStyle?: React.CSSProperties
     suggestionStyle?: React.CSSProperties
+    suggestionLabelStyle?: React.CSSProperties
+    alignementRef?: React.RefObject<HTMLElement>
 }
 
 const MapPin = (props: SVGProps<any>) => (
@@ -34,10 +36,13 @@ function useAutocomplete({
                              limit = 5,
                              hasWatermark = true,
                              containerStyle = {},
-                             suggestionStyle = {}
+                             suggestionStyle = {},
+    suggestionLabelStyle = {},
+    alignementRef
                          }: UseAutocompleteProps) {
 
     const ref = useRef<HTMLInputElement>(null);
+    const alignementReference = alignementRef || ref;
 
     const [suggestions, setSuggestions] = useState<AutocompleteFeature[]>([]);
     const [query, setQuery] = useState('');
@@ -84,11 +89,11 @@ function useAutocomplete({
     }, [ref]);
 
     useEffect(() => {
-        if (ref.current) {
-            const { top, left, height, width } = ref.current.getBoundingClientRect();
-            setPosition({ top: 0, left: 0, width });
+        if (alignementReference.current) {
+            const { top, left, height, width } = alignementReference.current.getBoundingClientRect();
+            setPosition({ top: top + height, left: left, width });
         }
-    }, [ref.current, suggestions]);
+    }, [alignementReference.current, suggestions]);
 
     useEffect(() => {
         if (ref.current && suggestions.length > 0) {
@@ -105,6 +110,7 @@ function useAutocomplete({
                         maxHeight: '200px',
                         overflowY: 'auto',
                         borderRadius: '4px',
+                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.04)',
                         ...containerStyle
                     }}
                 >
@@ -121,6 +127,9 @@ function useAutocomplete({
                                     fontFamily: 'inherit',
                                     whiteSpace: 'nowrap',
                                     overflow: 'hidden',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 4,
                                     ...suggestionStyle
                                 }}
                                 onMouseDown={() => {
@@ -130,7 +139,14 @@ function useAutocomplete({
                                     if (onSuggestionSelected) onSuggestionSelected(suggestion);
                                 }}
                             >
-                                <MapPin width={14} color={"#cecece"}/> {suggestion.properties.label}
+                                <MapPin width={15} />
+                                <span style={{
+                                    fontSize: '0.9em',
+                                    textOverflow: 'ellipsis',
+                                    overflow: 'hidden',
+                                    whiteSpace: 'nowrap',
+                                    width: 'calc(100% - 20px)',
+                                }}>{suggestion.properties.label}</span>
                             </li>
                         ))
                     )}
@@ -149,7 +165,9 @@ function useAutocomplete({
             );
 
             const portalElement = document.createElement('div');
+            portalElement.id = 'autocomplete-portal';
             portalElement.style.position = 'absolute';
+            portalElement.style.zIndex = '9999';
             portalElement.style.top = position.top + 'px';
             portalElement.style.left = position.left + 'px';
             portalElement.style.width = position.width + 'px';
