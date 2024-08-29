@@ -15,7 +15,7 @@ Install the library:
 npm install react-autocomplete-france
 ```
 ```shell
-yarn install react-autocomplete-france
+yarn add react-autocomplete-france
 ```
 ```shell
 pnpm install react-autocomplete-france
