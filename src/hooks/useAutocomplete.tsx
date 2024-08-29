@@ -95,10 +95,7 @@ function useAutocomplete({
             const suggestionBox = (
                 <ul
                     style={{
-                        position: 'absolute',
-                        top: position.top,
-                        left: position.left,
-                        width: position.width,
+                        position: 'relative',
                         border: '1px solid #E7E7E7',
                         backgroundColor: 'white',
                         zIndex: 1000,
@@ -152,7 +149,10 @@ function useAutocomplete({
             );
 
             const portalElement = document.createElement('div');
-            portalElement.style.position = 'relative';
+            portalElement.style.position = 'absolute';
+            portalElement.style.top = position.top + 'px';
+            portalElement.style.left = position.left + 'px';
+            portalElement.style.width = position.width + 'px';
 
             if (!ref.current) return;
             ref.current.parentNode?.insertBefore(portalElement, ref.current.nextSibling);
