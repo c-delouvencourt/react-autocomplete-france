@@ -2,6 +2,8 @@
 
 `react-autocomplete-france` is a React library for address autocompletion in France. It uses the `adresse.data.gouv.fr` API to provide real-time address suggestions.
 
+Live example : [https://tinyurl.com/example-autocomplete](https://tinyurl.com/example-autocomplete).
+
 ![Exemple](./ressources/example.png)
 
 
